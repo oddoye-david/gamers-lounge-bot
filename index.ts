@@ -9,7 +9,13 @@ dotenv.config()
 const client = new Discord.Client() as any
 client.commands = new Discord.Collection()
 
-const commandFiles = fs.readdirSync('./commands').filter((file) => file.endsWith('.js') || file.endsWith('.ts'))
+const commandFiles = fs.readdirSync('./commands').filter((file) => {
+  if (process.env.NODE_ENV === 'production') {
+    return file.endsWith('.js')
+  }
+
+  return file.endsWith('.ts')
+})
 
 for (const file of commandFiles) {
   const commandHandler = require(`./commands/${file}`)
