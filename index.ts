@@ -3,6 +3,7 @@ import * as Discord from 'discord.js'
 import * as _ from 'lodash'
 import * as dotenv from 'dotenv'
 import { Handler } from './types';
+import guildMemberAdd from './events/guildMemberAdd'
 
 dotenv.config()
 
@@ -41,10 +42,10 @@ client.on('message', (message: Discord.Message) => {
   }
 
   if (handler.hasArgs && !args.length) {
-    let reply = `You didn't provide any arguments, ${message.author}!`;
+    let reply = `You didn't provide any arguments, ${message.author}!`
 
     if (handler.usage) {
-      reply += `\nThe proper usage would be: \`${handler.usage}\``;
+      reply += `\nThe proper usage would be: \`${handler.usage}\``
     }
 
     return message.channel.send(reply)
@@ -52,5 +53,7 @@ client.on('message', (message: Discord.Message) => {
 
   return handler.execute(message, args)
 })
+
+client.on('guildMemberAdd', guildMemberAdd)
 
 client.login(process.env.BOT_TOKEN)
