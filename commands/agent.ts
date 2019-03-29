@@ -22,7 +22,7 @@ export const execute = (message: Discord.Message, args: string[]) => {
     return axios.get(`https://thedivisiontab.com/api/search.php?platform=${platform}&name=${agentTag}`)
       .then(({ data }) => {
         if (data.totalresults <= 0) {
-          message.channel.send(`Could not find and agent with the tag \`${agentTag}\` on ${PLATFORMS[platform]}`)
+          message.channel.send(`Could not find an agent with the tag \`${agentTag}\` on ${PLATFORMS[platform]}`)
         }
 
         const { pid } = data.results[0]
@@ -47,6 +47,9 @@ export const execute = (message: Discord.Message, args: string[]) => {
 
           })
       })
-      .catch(() => message.channel.stopTyping())
+      .catch((error) => {
+        message.channel.stopTyping()
+        throw error
+      })
   }
 }
