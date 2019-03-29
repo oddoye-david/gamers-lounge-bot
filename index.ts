@@ -42,7 +42,7 @@ client.on('message', (message: Discord.Message) => {
     const helpEmbed = new Discord.RichEmbed()
     .setDescription('Available commands')
 
-    _.each(ALL_COMMANDS, ({ desription, usage }) => helpEmbed.addField(desription, usage, false))
+    _.each(ALL_COMMANDS, ({ description, usage }) => helpEmbed.addField(description, `\`\`\`${usage}\`\`\``, false))
 
     return message.channel.send(helpEmbed)
   }
