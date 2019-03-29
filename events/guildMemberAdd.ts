@@ -14,6 +14,8 @@ Depending on your level of gameplay, you may 'have others for a meal' or rather 
 
 Find below our group guidelines. Kindly follow them meticulously.
 
+The list of all members and their gamer tags/ids can be found at https://docs.google.com/spreadsheets/d/1g9sbWfN22MME8Nql1hlEd96z130jFv5V6Z8vM3yhg0w/edit?usp=drivesdk please make sure to edit and add your details there as well.
+
 Once again, you are very welcome. We all are pleased having you and hope you do enjoy your stay.
 
 Thank you and God bless you.
