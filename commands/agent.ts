@@ -12,7 +12,7 @@ const PLATFORMS = {
 const ALLOWED_CHANNELS = ['560415367571177472']
 
 export const name = 'agent'
-export const description = 'Get Division 2 Agetn info'
+export const description = 'Get Division 2 Agent info. (platform can be xbl, psn or uplay)'
 export const usage = '!agent <agent_tag> <platform>'
 export const hasARgs = true
 export const execute = (message: Discord.Message, args: string[]) => {

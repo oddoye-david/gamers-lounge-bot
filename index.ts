@@ -10,6 +10,8 @@ dotenv.config()
 const client = new Discord.Client() as any
 client.commands = new Discord.Collection()
 
+const ALL_COMMANDS = []
+
 const commandFiles = fs.readdirSync('./commands').filter((file) => {
   if (process.env.NODE_ENV === 'production') {
     return file.endsWith('.js')
@@ -21,6 +23,7 @@ const commandFiles = fs.readdirSync('./commands').filter((file) => {
 for (const file of commandFiles) {
   const commandHandler = require(`./commands/${file}`)
   client.commands.set(commandHandler.name, commandHandler)
+  ALL_COMMANDS.push(commandHandler)
 }
 
 client.once('ready', () => {
@@ -34,6 +37,15 @@ client.on('message', (message: Discord.Message) => {
   }
   const args = message.content.slice(1).split(/ +/)
   const command = args.shift().toLowerCase()
+
+  if (command === 'help') {
+    const helpEmbed = new Discord.RichEmbed()
+    .setDescription('Available commands')
+
+    _.each(ALL_COMMANDS, ({ desription, usage }) => helpEmbed.addField(desription, usage, false))
+
+    return message.channel.send(helpEmbed)
+  }
 
   const handler = client.commands.get(command) as Handler
 
