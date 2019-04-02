@@ -18,21 +18,7 @@ const client = new Discord.Client() as any
 client.commands = new Discord.Collection()
 
 const ALL_HANDLERS = [] as Handler[]
-const STREAMERS = [
-  {
-    name: 'Liteninbolt2k9',
-    id: '1386294'
-  },
-  {
-    name: 'theRealBraZee',
-    id: '953937'
-  },
-  {
-    name: 'askKeLLs',
-    id: '1345262'
-  }
-]
-
+const STREAMERS = JSON.parse(process.env.STREAMERS)
 const ca = new Carina({ isBot: true }).open()
 _.each(STREAMERS, ({ id, name }) => {
   console.log(`Listening on WS for changes to ${name}'s Mixer Channel`)
