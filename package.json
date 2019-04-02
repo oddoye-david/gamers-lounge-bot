@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "0.18.0",
     "bluebird": "3.5.2",
+    "carina": "^0.11.2",
     "discord.js": "11.4.2",
     "dotenv": "6.1.0",
     "lodash": "4.17.11",

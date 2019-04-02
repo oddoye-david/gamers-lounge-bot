@@ -2,8 +2,15 @@ import * as fs from 'fs'
 import * as Discord from 'discord.js'
 import * as _ from 'lodash'
 import * as dotenv from 'dotenv'
+import axios from 'axios'
 import { Handler } from './types';
 import guildMemberAdd from './events/guildMemberAdd'
+
+import { Carina } from 'carina'
+import * as ws from 'ws'
+
+Carina.WebSocket = ws
+
 
 dotenv.config()
 
@@ -11,6 +18,39 @@ const client = new Discord.Client() as any
 client.commands = new Discord.Collection()
 
 const ALL_HANDLERS = [] as Handler[]
+const STREAMERS = [{
+  name: 'Liteninbolt2k9',
+  id: '1386294'
+},
+{
+  name: 'theRealBraZee',
+  id: '953937'
+}]
+
+const ca = new Carina({ isBot: true }).open()
+_.each(STREAMERS, ({ id, name }) => {
+  console.log(`Listening on WS for changes to ${name}'s Mixer Channel`)
+  ca.subscribe(`channel:${id}:update`, ({ online, updatedAt }) => {
+    if (online === true && !!updatedAt) {
+      const streamEmbed = new Discord.RichEmbed()
+
+      return axios.get(`https://mixer.com/api/v1/channels/${name}`)
+        .then(({ data }) => {
+          const description = `${name} is _${data.name}_ ${(data.type && data.type.name) ? `on *${data.type.name}* ` : ''}!!!`
+          streamEmbed.setDescription(description)
+            .setAuthor(
+              name,
+              'https://d24h4out7wreu3.cloudfront.net/product_images/p/818162.f56.ba211S7ay1Cm2MjUAAA-650x650-b-p.png',
+              `https://mixer.com/${name}`
+            )
+            .setImage(data.type.coverUrl)
+
+          client.channels.get(process.env.STREAM_CHANNELL || '562684130228437039').send(streamEmbed)
+        })
+
+    }
+  })
+})
 
 const commandFiles = fs.readdirSync('./commands').filter((file) => {
   if (process.env.NODE_ENV === 'production') {
