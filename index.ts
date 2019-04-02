@@ -21,7 +21,7 @@ const commandFiles = fs.readdirSync('./commands').filter((file) => {
 })
 
 for (const file of commandFiles) {
-  const commandHandler = require(`./commands/${file}`)
+  const commandHandler = require(`./commands/${file}`).default
   client.commands.set(commandHandler.name, commandHandler)
   ALL_COMMANDS.push(commandHandler)
 }
