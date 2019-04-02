@@ -10,7 +10,7 @@ dotenv.config()
 const client = new Discord.Client() as any
 client.commands = new Discord.Collection()
 
-const ALL_COMMANDS = []
+const ALL_HANDLERS = [] as Handler[]
 
 const commandFiles = fs.readdirSync('./commands').filter((file) => {
   if (process.env.NODE_ENV === 'production') {
@@ -23,7 +23,7 @@ const commandFiles = fs.readdirSync('./commands').filter((file) => {
 for (const file of commandFiles) {
   const commandHandler = require(`./commands/${file}`).default
   client.commands.set(commandHandler.name, commandHandler)
-  ALL_COMMANDS.push(commandHandler)
+  ALL_HANDLERS.push(commandHandler)
 }
 
 client.once('ready', () => {
@@ -40,9 +40,13 @@ client.on('message', (message: Discord.Message) => {
 
   if (command === 'help') {
     const helpEmbed = new Discord.RichEmbed()
-    .setDescription('Available commands')
+      .setDescription('Available commands')
 
-    _.each(ALL_COMMANDS, ({ description, usage }) => helpEmbed.addField(description, `\`\`\`${usage}\`\`\``, false))
+    _.each(ALL_HANDLERS, ({ description, usage, allowedChannels }) => {
+      if (_.includes(allowedChannels, message.channel.id)) {
+        helpEmbed.addField(description, `\`\`\`${usage}\`\`\``, false)
+      }
+    })
 
     return message.channel.send(helpEmbed)
   }
@@ -63,7 +67,11 @@ client.on('message', (message: Discord.Message) => {
     return message.channel.send(reply)
   }
 
-  return handler.execute(message, args)
+  if (_.includes(handler.allowedChannels, message.channel.id)) {
+    return handler.execute(message, args)
+  } else {
+    return message.channel.send(`Command \`${command}\` is not allowed in this channel.`)
+  }
 })
 
 client.on('guildMemberAdd', guildMemberAdd)
