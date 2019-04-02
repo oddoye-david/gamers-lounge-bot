@@ -36,7 +36,7 @@ _.each(STREAMERS, ({ id, name }) => {
 
       return axios.get(`https://mixer.com/api/v1/channels/${name}`)
         .then(({ data }) => {
-          const description = `${name} is _${data.name}_ ${(data.type && data.type.name) ? `on *${data.type.name}* ` : ''}!!!`
+          const description = `${name} is _${data.name}_ ${(data.type && data.type.name) ? `on ***${data.type.name}*** ` : ''}!!!`
           streamEmbed.setDescription(description)
             .setAuthor(
               name,
